@@ -2,14 +2,12 @@ package com.yihe.crawler;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -28,10 +26,7 @@ public class MainFra extends JFrame {
     /**
      * UID
      */
-    private static final long serialVersionUID = 7785711670000642386L;
-
-    private static final int INSET = 3;
-    private static final Insets COMP_INSETS = new Insets(INSET, INSET, INSET, INSET);
+    private static final long serialVersionUID = 8108922838159780144L;
 
     private DefaultTableModel defaultModel;
 

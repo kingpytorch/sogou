@@ -1,16 +1,16 @@
 package com.yihe.crawler;
 
+import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Set;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.table.DefaultTableModel;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -59,7 +59,8 @@ public class Crawler {
         this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
-    public void crawlerKeywords(String keywords) {
+    public void crawlerKeywords() {
+        String keywords = this.getKeyworkds();
         this.driver.findElement(By.xpath("//*[@id=\"pc-head\"]/div[1]/ul/li[2]/a")).click();
         this.sleep(2);
 
@@ -83,11 +84,33 @@ public class Crawler {
             }
 
             try {
-                TimeUnit.SECONDS.sleep(60);
+                TimeUnit.SECONDS.sleep(this.getSpan());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String getKeyworkds() {
+        Properties pp = new Properties();
+        try {
+            pp.load(new FileInputStream("config.properties"));
+        } catch (Exception ex) {
+
+        }
+
+        return pp.getProperty("keywords", "投票,候选,评选");
+    }
+
+    private int getSpan() {
+        Properties pp = new Properties();
+        try {
+            pp.load(new FileInputStream("config.properties"));
+        } catch (Exception ex) {
+
+        }
+
+        return Integer.parseInt(pp.getProperty("span", "60"));
     }
 
     public void crawler(String keyword) {
@@ -95,10 +118,10 @@ public class Crawler {
             driver.findElement(By.id("query")).clear();
             this.sleep(1);
             driver.findElement(By.id("query")).sendKeys(keyword);
-            this.sleep(3);
+            this.sleep(1);
 
             driver.findElement(By.className("swz")).click();
-            this.sleep(2);
+            this.sleep(1);
             driver.findElement(By.xpath("//*[@id=\"tool_show\"]/a")).click();
             this.sleep(1);
             driver.findElement(By.id("time")).click();
