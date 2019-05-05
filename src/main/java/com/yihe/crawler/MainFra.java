@@ -7,10 +7,16 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -87,11 +93,35 @@ public class MainFra extends JFrame {
 
             @Override
             public void run() {
+                System.out.println("hee");
                 crawler.quit();
             }
         }));
 
         ToolPane toolPane = new ToolPane(this.crawler);
         this.add(toolPane, BorderLayout.NORTH);
+
+        this.initMenu(this);
+    }
+
+    private void initMenu(JFrame mainFrame) {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu systemMenu = new JMenu("系统");
+
+        JMenuItem menuExit = new JMenuItem("退出");
+        menuExit.setMnemonic(KeyEvent.VK_E);
+        menuExit.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        systemMenu.add(menuExit);
+        menuBar.add(systemMenu);
+
+        mainFrame.setJMenuBar(menuBar);
     }
 }
