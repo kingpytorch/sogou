@@ -97,7 +97,6 @@ public class Crawler {
             driver.findElement(By.id("query")).sendKeys(keyword);
             this.sleep(3);
 
-            ((JavascriptExecutor)driver).executeScript("window.stop();");
             driver.findElement(By.className("swz")).click();
             this.sleep(2);
             driver.findElement(By.xpath("//*[@id=\"tool_show\"]/a")).click();
@@ -109,7 +108,7 @@ public class Crawler {
 
             this.crawlerPage(keyword);
             for (int i = 2; i <= 10; i++) {
-                String elementId = "sogou_page_" + i;
+                final String elementId = "sogou_page_" + i;
 
                 WebElement ele = (new WebDriverWait(this.driver, 1)).until(new ExpectedCondition<WebElement>() {
 
