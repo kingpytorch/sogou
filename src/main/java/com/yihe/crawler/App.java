@@ -1,8 +1,5 @@
 package com.yihe.crawler;
 
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 /**
@@ -14,9 +11,7 @@ public class App {
 
             @Override
             public void run() {
-                JFrame fra = new MainFra();
-                fra.setPreferredSize(new Dimension(800, 600));
-                fra.pack();
+                new MainFra();
             }
         });
     }

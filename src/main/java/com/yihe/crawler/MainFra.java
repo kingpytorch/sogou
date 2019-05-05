@@ -33,7 +33,8 @@ public class MainFra extends JFrame {
     public MainFra() {
         JFrame.setDefaultLookAndFeelDecorated(true);
         this.setTitle("搜狗微信抓取");
-        this.setPreferredSize(new Dimension(800, 600));
+        this.setSize(new Dimension(800, 600));
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.defaultModel = new DefaultTableModel(new String[] {"序号", "已复制", "标题", "ID"}, 0);
@@ -81,7 +82,6 @@ public class MainFra extends JFrame {
         this.add(new JScrollPane(paneTable), BorderLayout.CENTER);
 
         this.setVisible(true);
-        this.setSize(500, 350);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 
