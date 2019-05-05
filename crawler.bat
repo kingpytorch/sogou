@@ -1,1 +1,1 @@
-java -jar sogou.jar
+start /b .\jre\bin\javaw -jar sogou.jar
