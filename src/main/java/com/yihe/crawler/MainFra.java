@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -93,7 +94,6 @@ public class MainFra extends JFrame {
 
             @Override
             public void run() {
-                System.out.println("hee");
                 crawler.quit();
             }
         }));
@@ -104,13 +104,30 @@ public class MainFra extends JFrame {
         this.initMenu(this);
     }
 
-    private void initMenu(JFrame mainFrame) {
+    private void initMenu(final JFrame mainFrame) {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu systemMenu = new JMenu("系统");
 
+        JMenuItem menuOption = new JMenuItem("设置");
+        menuOption.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog dlg = new OptionsDialog(mainFrame);
+                dlg.setSize(350, 160);
+                dlg.setResizable(false);
+                dlg.setLocationRelativeTo(null);
+
+                dlg.setVisible(true);
+            }
+        });
+
+        systemMenu.add(menuOption);
+
+        systemMenu.addSeparator();
+
         JMenuItem menuExit = new JMenuItem("退出");
-        menuExit.setMnemonic(KeyEvent.VK_E);
         menuExit.addActionListener(new ActionListener() {
 
             @Override
