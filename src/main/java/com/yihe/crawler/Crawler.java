@@ -78,12 +78,12 @@ public class Crawler {
 
         String[] keys = keywords.split(",");
         for (;;) {
-            for (String key : keys) {
-                this.crawler(key);
-                this.sleep(2);
-            }
-
             try {
+                for (String key : keys) {
+                    this.crawler(key);
+                    this.sleep(2);
+                }
+
                 TimeUnit.SECONDS.sleep(this.getSpan());
             } catch (InterruptedException e) {
                 e.printStackTrace();
