@@ -1,6 +1,7 @@
 package com.yihe.crawler;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -19,7 +21,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class MainFra extends JFrame {
@@ -59,17 +63,26 @@ public class MainFra extends JFrame {
         table.setRowHeight(28);
         table.getTableHeader().setPreferredSize(new Dimension(table.getWidth(), 28));
         table.getColumnModel().getColumn(0).setMaxWidth(60);
+        table.getColumnModel().getColumn(0).setCellRenderer(new MyCellRenderer());
         table.getColumnModel().getColumn(1).setMaxWidth(60);
+        table.getColumnModel().getColumn(1).setCellRenderer(new MyCellRenderer());
         table.getColumnModel().removeColumn(table.getColumnModel().getColumn(3));
 
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    int row = ((JTable)e.getSource()).rowAtPoint(e.getPoint());
+                    JTable component = (JTable)e.getSource();
+                    int row = component.rowAtPoint(e.getPoint());
 
-                    String data = String.valueOf(((JTable)e.getSource()).getModel().getValueAt(row, 2));
-                    ((JTable)e.getSource()).getModel().setValueAt("已复制", row, 1);
+                    String data = String.valueOf(component.getModel().getValueAt(row, 2));
+
+                    String status = String.valueOf(component.getModel().getValueAt(row, 1));
+                    if (!"√".equals(status)) {
+                        component.getModel().setValueAt("√", row, 1);
+                        ItemDao.updateStatus(String.valueOf(component.getModel().getValueAt(row, 3)));
+                    }
+
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     Transferable trans = new StringSelection(data);
 
@@ -97,6 +110,7 @@ public class MainFra extends JFrame {
         this.add(toolPane, BorderLayout.NORTH);
 
         this.initMenu(this);
+        this.initData();
     }
 
     private void initMenu(final JFrame mainFrame) {
@@ -135,5 +149,33 @@ public class MainFra extends JFrame {
         menuBar.add(systemMenu);
 
         mainFrame.setJMenuBar(menuBar);
+    }
+
+    private void initData() {
+        try {
+            ItemDao.crateTable();
+            int count = 1;
+            for (Item item : ItemDao.getItems()) {
+                this.defaultModel
+                    .addRow(new String[] {String.valueOf(count), item.getStatus(), item.getCaption(), item.getMd5()});
+                count++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    class MyCellRenderer extends DefaultTableCellRenderer {
+        /**
+         * UID
+         */
+        private static final long serialVersionUID = 4862364547990169509L;
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+            boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            return this;
+        }
     }
 }

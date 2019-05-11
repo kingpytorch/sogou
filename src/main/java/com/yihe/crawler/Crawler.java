@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -224,6 +225,7 @@ public class Crawler {
             if (!isExist) {
                 String count = String.valueOf(this.defaultModel.getRowCount() + 1);
                 this.defaultModel.addRow(new String[] {count, "", caption, md5Caption});
+                ItemDao.addItem(new Item(md5Caption, caption, "", new Date()));
             }
         }
 
