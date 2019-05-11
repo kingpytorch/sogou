@@ -15,6 +15,7 @@ public class ToolPane extends JPanel {
     private static final long serialVersionUID = -1932668073593661325L;
     private JButton btnStart = new JButton("开始(登录、扫描微信)");
     private JButton btnScrawler = new JButton("抓取");
+
     private Crawler crawler;
 
     public ToolPane(Crawler crawler) {

@@ -29,6 +29,7 @@ public class OptionsDialog extends JDialog {
     private JTextField txtFilterText = new JTextField();
     private JTextField txtQuerySpan = new JTextField();
     private JTextField txtQueryDays = new JTextField();
+    private JTextField txtSaveDays = new JTextField();
 
     public OptionsDialog(Frame owner) {
         super(owner);
@@ -46,6 +47,7 @@ public class OptionsDialog extends JDialog {
         String keywords = pp.getProperty("keywords", "投票,候选,评选");
         String crawlerSpan = pp.getProperty("span", "60");
         String queryDays = pp.getProperty("days", "1");
+        String saveDays = pp.getProperty("saveDays", "7");
 
         infoPane.add(new JLabel("搜索文本"), newGridBagConstraints(0, 0));
         txtFilterText.setText(keywords);
@@ -57,10 +59,15 @@ public class OptionsDialog extends JDialog {
         txtQuerySpan.setText(crawlerSpan);
         infoPane.add(txtQuerySpan, newGridBagConstraints(1, 1));
 
-        infoPane.add(new JLabel("每次搜索天数"), newGridBagConstraints(0, 2));
+        infoPane.add(new JLabel("每次搜索天数(<=7)"), newGridBagConstraints(0, 2));
         txtQueryDays.setPreferredSize(dim);
         txtQueryDays.setText(queryDays);
         infoPane.add(txtQueryDays, newGridBagConstraints(1, 2));
+
+        infoPane.add(new JLabel("数据保留天数(<=7)"), newGridBagConstraints(0, 3));
+        txtSaveDays.setPreferredSize(dim);
+        txtSaveDays.setText(saveDays);
+        infoPane.add(txtSaveDays, newGridBagConstraints(1, 3));
 
         this.add(infoPane);
 
@@ -75,6 +82,7 @@ public class OptionsDialog extends JDialog {
                     pp.setProperty("keywords", txtFilterText.getText().trim());
                     pp.setProperty("span", txtQuerySpan.getText().trim());
                     pp.setProperty("days", txtQueryDays.getText().trim());
+                    pp.setProperty("saveDays", txtSaveDays.getText().trim());
 
                     pp.store(new FileOutputStream("config.properties"), "LEXLOO");
                 } catch (Exception ex) {

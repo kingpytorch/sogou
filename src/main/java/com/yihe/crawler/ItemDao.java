@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,8 +30,15 @@ public class ItemDao {
                 new String[] {"TABLE"});
             if (!rsTables.next()) {
                 stmt = conn.createStatement();
-                stmt.execute(
-                    "create table items(md5 varchar(32),caption varchar(500),status varchar(6),modify_time timestamp, primary key(md5))");
+                String sql = "create table items"
+                    + "(md5 varchar(32),"
+                    + "caption varchar(500),"
+                    + "status varchar(6),"
+                    + "date_str varchar(10),"
+                    + "keyword varchar(50),"
+                    + "modify_time timestamp,"
+                    + "primary key(md5))";
+                stmt.execute(sql);
             }
             rsTables.close();
         } finally {
@@ -45,11 +53,13 @@ public class ItemDao {
             conn = DB.getInstance().getConnection();
 
             stmt = conn
-                .prepareStatement("insert into items values(?,?,?,?)");
+                .prepareStatement("insert into items values(?,?,?,?,?,?)");
             stmt.setString(1, item.getMd5());
             stmt.setString(2, item.getCaption());
             stmt.setString(3, item.getStatus());
-            stmt.setObject(4, item.getStatus());
+            stmt.setString(4, item.getDateStr());
+            stmt.setString(5, item.getKeyword());
+            stmt.setObject(6, item.getModifyTime());
 
             stmt.execute();
         } catch (SQLException e) {
@@ -70,11 +80,12 @@ public class ItemDao {
         try {
             conn = DB.getInstance().getConnection();
             stmt = conn
-                .prepareStatement("select md5, caption, status from items order by modify_time");
+                .prepareStatement("select md5, caption, status, date_str, keyword from items order by modify_time");
             rs = stmt.executeQuery();
             List<Item> items = new ArrayList<Item>();
             while (rs.next()) {
-                Item item = new Item(rs.getString(1), rs.getString(2), rs.getString(3), null);
+                Item item =
+                    new Item(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), null);
 
                 items.add(item);
             }
@@ -114,23 +125,33 @@ public class ItemDao {
         }
     }
 
-    // public static boolean isInfoExits(String filePath, long lastModifyTime)
-    // throws SQLException {
-    // Connection conn = null;
-    // PreparedStatement stmt = null;
-    // ResultSet rs = null;
-    // try {
-    // conn = DB.getInstance().getConnection();
-    // stmt = conn
-    // .prepareStatement("SELECT WEATHERSTR FROM WEATHERINFO WHERE STATUS=? AND LASTMODIFYTIME=?");
-    // stmt.setString(1, filePath);
-    // stmt.setString(2, String.valueOf(lastModifyTime));
-    // rs = stmt.executeQuery();
-    // return rs.next();
-    // } finally {
-    // releaseConnection(conn, stmt, rs);
-    // }
-    // }
+    /**
+     * 删除旧数据
+     * 
+     * @param days 保留天数
+     */
+    public static void deleteOldData(int days) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DB.getInstance().getConnection();
+            stmt = conn
+                .prepareStatement("delete from items where modify_time > ?");
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, -days);
+            stmt.setObject(1, calendar.getTime());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                releaseConnection(conn, stmt, rs);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private static void releaseConnection(Connection conn, Statement stmt,
         ResultSet rs) throws SQLException {

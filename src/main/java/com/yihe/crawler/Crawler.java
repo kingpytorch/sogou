@@ -216,7 +216,7 @@ public class Crawler {
             String md5Caption = this.md5(caption);
             boolean isExist = false;
             for (int i = 0; i < this.defaultModel.getRowCount(); i++) {
-                if (this.defaultModel.getValueAt(i, 3).equals(md5Caption)) {
+                if (this.defaultModel.getValueAt(i, 5).equals(md5Caption)) {
                     isExist = true;
                     continue;
                 }
@@ -224,8 +224,11 @@ public class Crawler {
 
             if (!isExist) {
                 String count = String.valueOf(this.defaultModel.getRowCount() + 1);
-                this.defaultModel.addRow(new String[] {count, "", caption, md5Caption});
-                ItemDao.addItem(new Item(md5Caption, caption, "", new Date()));
+                Date d = new Date();
+                String dstr = dateFormat.format(d);
+
+                this.defaultModel.addRow(new String[] {count, "", dstr, keywords, caption, md5Caption});
+                ItemDao.addItem(new Item(md5Caption, caption, "", dstr, keywords, d));
             }
         }
 
