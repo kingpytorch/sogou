@@ -110,7 +110,7 @@ public class MainFra extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JDialog dlg = new OptionsDialog(mainFrame);
-                dlg.setSize(350, 160);
+                dlg.setSize(350, 200);
                 dlg.setResizable(false);
                 dlg.setLocationRelativeTo(null);
 

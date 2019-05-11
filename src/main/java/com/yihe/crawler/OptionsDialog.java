@@ -28,6 +28,7 @@ public class OptionsDialog extends JDialog {
     private static final Insets COMP_INSETS = new Insets(INSET, INSET, INSET, INSET);
     private JTextField txtFilterText = new JTextField();
     private JTextField txtQuerySpan = new JTextField();
+    private JTextField txtQueryDays = new JTextField();
 
     public OptionsDialog(Frame owner) {
         super(owner);
@@ -44,6 +45,7 @@ public class OptionsDialog extends JDialog {
         }
         String keywords = pp.getProperty("keywords", "投票,候选,评选");
         String crawlerSpan = pp.getProperty("span", "60");
+        String queryDays = pp.getProperty("days", "1");
 
         infoPane.add(new JLabel("搜索文本"), newGridBagConstraints(0, 0));
         txtFilterText.setText(keywords);
@@ -52,8 +54,13 @@ public class OptionsDialog extends JDialog {
 
         infoPane.add(new JLabel("搜索间隔(秒)"), newGridBagConstraints(0, 1));
         txtQuerySpan.setPreferredSize(dim);
-        txtQuerySpan.setText(String.valueOf(crawlerSpan));
+        txtQuerySpan.setText(crawlerSpan);
         infoPane.add(txtQuerySpan, newGridBagConstraints(1, 1));
+
+        infoPane.add(new JLabel("每次搜索天数"), newGridBagConstraints(0, 2));
+        txtQueryDays.setPreferredSize(dim);
+        txtQueryDays.setText(queryDays);
+        infoPane.add(txtQueryDays, newGridBagConstraints(1, 2));
 
         this.add(infoPane);
 
@@ -67,6 +74,8 @@ public class OptionsDialog extends JDialog {
                     Properties pp = new Properties();
                     pp.setProperty("keywords", txtFilterText.getText().trim());
                     pp.setProperty("span", txtQuerySpan.getText().trim());
+                    pp.setProperty("days", txtQueryDays.getText().trim());
+
                     pp.store(new FileOutputStream("config.properties"), "LEXLOO");
                 } catch (Exception ex) {
 

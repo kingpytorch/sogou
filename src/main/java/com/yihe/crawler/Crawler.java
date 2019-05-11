@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +30,8 @@ public class Crawler {
     public Crawler(DefaultTableModel defaultModel) {
         this.defaultModel = defaultModel;
     }
+
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * 等待
@@ -113,6 +117,29 @@ public class Crawler {
         return Integer.parseInt(pp.getProperty("span", "60"));
     }
 
+    private int getDays() {
+        Properties pp = new Properties();
+        try {
+            pp.load(new FileInputStream("config.properties"));
+        } catch (Exception ex) {
+
+        }
+
+        int days = Integer.parseInt(pp.getProperty("days", "1"));
+        if (days > 7) {
+            days = 7;
+        }
+
+        return days;
+    }
+
+    private static String getDateString(int beforeDay) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1 - beforeDay);
+
+        return dateFormat.format(calendar.getTime());
+    }
+
     public void crawler(String keyword) {
         try {
             driver.findElement(By.id("query")).clear();
@@ -125,8 +152,21 @@ public class Crawler {
             driver.findElement(By.xpath("//*[@id=\"tool_show\"]/a")).click();
             this.sleep(1);
             driver.findElement(By.id("time")).click();
+
             this.sleep(1);
-            driver.findElement(By.xpath("//*[@id=\"tool\"]/span[1]/div/a[2]")).click();
+            int days = this.getDays();
+            if (days > 1) {
+                driver.findElement(By.id("date_start")).clear();
+                driver.findElement(By.id("date_start")).sendKeys(getDateString(days));
+
+                driver.findElement(By.id("date_end")).clear();
+                driver.findElement(By.id("date_end")).sendKeys(getDateString(1));
+
+                driver.findElement(By.id("time_enter")).click();
+            } else {
+                driver.findElement(By.xpath("//*[@id=\"tool\"]/span[1]/div/a[2]")).click();
+            }
+
             this.sleep(1);
 
             this.crawlerPage(keyword);
@@ -169,8 +209,6 @@ public class Crawler {
                 String captiont = elemt.getText();
                 if (!captiont.contains(keywords)) {
                     return false;
-                } else {
-                    System.out.println(captiont);
                 }
             }
 
