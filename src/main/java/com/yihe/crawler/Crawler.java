@@ -193,7 +193,7 @@ public class Crawler {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+             ex.printStackTrace();
         }
     }
 
@@ -204,12 +204,13 @@ public class Crawler {
         for (WebElement txtBox : elems) {
             WebElement elem = txtBox.findElement(By.xpath("./h3/a"));
             String caption = elem.getText();
-
             if (!caption.contains(keywords)) {
                 WebElement elemt = txtBox.findElement(By.className("txt-info"));
-                String captiont = elemt.getText();
-                if (!captiont.contains(keywords)) {
-                    return false;
+                if (elemt != null) {
+                    String captiont = elemt.getText();
+                    if (!captiont.contains(keywords)) {
+                        return false;
+                    }
                 }
             }
 

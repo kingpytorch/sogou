@@ -86,7 +86,7 @@ public class MainFra extends JFrame {
                     String status = String.valueOf(component.getModel().getValueAt(row, 1));
                     if (!"√".equals(status)) {
                         component.getModel().setValueAt("√", row, 1);
-                        ItemDao.updateStatus(String.valueOf(component.getModel().getValueAt(row, 3)));
+                        ItemDao.updateStatus(String.valueOf(component.getModel().getValueAt(row, 5)));
                     }
 
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

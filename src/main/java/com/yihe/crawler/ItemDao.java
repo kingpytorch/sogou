@@ -137,7 +137,7 @@ public class ItemDao {
         try {
             conn = DB.getInstance().getConnection();
             stmt = conn
-                .prepareStatement("delete from items where modify_time > ?");
+                .prepareStatement("delete from items where modify_time < ?");
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, -days);
             stmt.setObject(1, calendar.getTime());
