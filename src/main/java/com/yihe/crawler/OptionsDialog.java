@@ -47,7 +47,7 @@ public class OptionsDialog extends JDialog {
         String keywords = pp.getProperty("keywords", "投票,候选,评选");
         String crawlerSpan = pp.getProperty("span", "60");
         String queryDays = pp.getProperty("days", "1");
-        String saveDays = pp.getProperty("saveDays", "7");
+        String saveDays = pp.getProperty("saveDays", "2");
 
         infoPane.add(new JLabel("搜索文本"), newGridBagConstraints(0, 0));
         txtFilterText.setText(keywords);

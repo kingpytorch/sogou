@@ -181,7 +181,7 @@ public class MainFra extends JFrame {
 
         }
 
-        int days = Integer.parseInt(pp.getProperty("saveDays", "7"));
+        int days = Integer.parseInt(pp.getProperty("saveDays", "2"));
         if (days > 7) {
             days = 7;
         }
